@@ -9,8 +9,8 @@ const defaultMeta = {
   siteName: 'George Drăgan - Software Developer',
   description:
     'One pice of the internet were you can find a bit about me and what I find interesting',
-  url: '<TODO>',
-  image: '<TODO>',
+  url: 'https://georgedragan.ro',
+  image: '',
   type: 'website',
   robots: 'follow, index',
 };

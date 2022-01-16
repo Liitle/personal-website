@@ -16,6 +16,11 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      backgroundImage: {
+        night:
+          "url('https://media.istockphoto.com/photos/deep-space-background-picture-id178149253?b=1&k=20&m=178149253&s=170667a&w=0&h=_XDvcsDmRo_O9sV9l_Q4kNXZQq14xU9Cf-Ai7LpJOSY=')",
+        day: "url('https://patcegan.files.wordpress.com/2012/02/morning-light.jpg')",
+      },
       fontFamily: {
         primary: ['Inter', ...fontFamily.sans],
       },

@@ -13,12 +13,14 @@ const Header: React.FC = () => {
 
   return (
     <header>
-      <div className='flex justify-center my-4'>
+      <div
+        className='flex flex-col justify-center items-center my-4 rounded'
+        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      >
         <button
           aria-label='Toggle Dark Mode'
           type='button'
-          className='p-3 w-10 h-10 rounded focus:outline-none'
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className='mr-2 h-10 rounded focus:outline-none'
         >
           {mounted && (
             <svg
@@ -26,7 +28,7 @@ const Header: React.FC = () => {
               viewBox='0 0 24 24'
               fill='currentColor'
               stroke='currentColor'
-              className='w-4 h-4 text-yellow-500 dark:text-yellow-500'
+              className='w-6 h-6 text-yellow-500 dark:text-yellow-500'
             >
               {theme === 'dark' ? (
                 <path
@@ -46,6 +48,9 @@ const Header: React.FC = () => {
             </svg>
           )}
         </button>
+        <span className='font-mono text-xs font-extrabold uppercase'>
+          {'Switch'}
+        </span>
       </div>
       {/* <nav>
         <ul className='flex justify-center'>

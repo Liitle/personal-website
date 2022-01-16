@@ -61,7 +61,8 @@ const HomePage: React.FC<{
                   George Drăgan
                 </h1>
                 <sub>
-                  Software Developer at{' '}
+                  Software Developer
+                  {/* at{' '}
                   <a
                     className='hover:underline'
                     href='https://www.qcatalyst.com'
@@ -69,7 +70,7 @@ const HomePage: React.FC<{
                     rel='noreferrer'
                   >
                     <b>QCatalyst</b>
-                  </a>
+                  </a> */}
                 </sub>
               </div>
               <p className='mt-2 max-w-lg text-gray-500 dark:text-gray-300'>
@@ -516,7 +517,7 @@ const HomePage: React.FC<{
                       <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
                         Making my way around a big distributed crawling
                         infrastructure, extracting data, building reports and
-                        learning a lot of stuff
+                        learning a lot of stuff.
                       </p>
                     </div>
                   </div>
