@@ -5,12 +5,13 @@ import { openGraph } from '@/lib/helper';
 
 // !STARTERCONF Change these default meta
 const defaultMeta = {
-  title: 'George Drăgan - Software Developer',
-  siteName: 'George Drăgan - Software Developer',
+  title: 'George Dragan - Software Developer',
+  siteName: 'George Dragan - Software Developer',
   description:
     'One pice of the internet were you can find a bit about me and what I find interesting',
   url: 'https://georgedragan.ro',
-  image: '',
+  image:
+    'https://raw.githubusercontent.com/Liitle/personal-website/74fa89e8a3c9c823795b55b22d1e9c3e8f73e2cc/public/images/GLogoJPG.jpeg',
   type: 'website',
   robots: 'follow, index',
 };
@@ -68,7 +69,7 @@ export default function Seo(props: SeoProps) {
           <meta
             name='author'
             property='article:author'
-            content='Theodorus Clarence'
+            content='George Dragan'
           />
         </>
       )}
@@ -94,8 +95,6 @@ type Favicons = {
   type?: string;
 };
 
-// !STARTERCONF this is the default favicon, you can generate your own from https://www.favicon-generator.org/
-// then replace the whole /public/favicon folder
 const favicons: Array<Favicons> = [
   {
     rel: 'apple-touch-icon',
