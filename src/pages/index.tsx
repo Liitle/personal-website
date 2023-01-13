@@ -74,7 +74,7 @@ const HomePage: React.FC<{
   return (
     <Layout>
       <Seo />
-      <main>
+      <main className='mb-10'>
         <section className='mt-10'>
           <div className='flex flex-col items-center'>
             <div
@@ -84,7 +84,7 @@ const HomePage: React.FC<{
               {theme === 'dark' ? (
                 <Image
                   className='rounded-full'
-                  src={ProfilePicDay}
+                  src={ProfilePicNight}
                   alt='Picture of George Dragan'
                   width={200}
                   height={200}
@@ -92,12 +92,28 @@ const HomePage: React.FC<{
               ) : (
                 <Image
                   className='rounded-full'
-                  src={ProfilePicNight}
+                  src={ProfilePicDay}
                   alt='Picture of George Dragan'
                 />
               )}
             </div>
-            <div className='flex justify-center my-4'>
+
+            <h1 className='font-mono text-gray-800 dark:text-gray-100'>
+              George Drăgan
+            </h1>
+            <span className=''>
+              Software Developer at{' '}
+              <a
+                className='hover:underline'
+                href='https://www.qcatalyst.com'
+                target='_blank'
+                rel='noreferrer'
+              >
+                <b>QC</b>
+              </a>
+            </span>
+
+            <div className='grid grid-flow-col auto-cols-max mt-2'>
               <a
                 className='ml-3'
                 href='https://www.instagram.com/georgedragan01/'
@@ -140,25 +156,7 @@ const HomePage: React.FC<{
                 </svg>
               </a>
             </div>
-          </div>
-          <div>
-            <div className='mb-8'>
-              <h1 className='font-mono text-gray-800 dark:text-gray-100'>
-                George Drăgan
-              </h1>
-              <sub>
-                Software Developer at{' '}
-                <a
-                  className='hover:underline'
-                  href='https://www.qcatalyst.com'
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <b>QC</b>
-                </a>
-              </sub>
-            </div>
-            <p className='mt-2 max-w-lg text-gray-500 dark:text-gray-300'>
+            <p className='mt-10 max-w-lg text-gray-500 dark:text-gray-300'>
               Part of amazing teams building beautiful products! Passionate
               about easily maintainable technologies that deliver products fast!
             </p>
