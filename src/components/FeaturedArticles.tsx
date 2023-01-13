@@ -1,3 +1,5 @@
+import { RoughNotation } from 'react-rough-notation';
+
 interface FeaturedArticlesProps {
   articles: { title: string; description: string; url: string }[];
 }
@@ -7,8 +9,12 @@ const FeaturedArticles: React.FunctionComponent<FeaturedArticlesProps> = ({
 }) => {
   return (
     <section className='mt-10'>
-      <h2>What I found interesting this week:</h2>
-      <div className='grid grid-cols-3 gap-3 mt-10'>
+      <h2>
+        <RoughNotation type='underline' color='#FFC100' show={true}>
+          What I found interesting this week
+        </RoughNotation>
+      </h2>
+      <div className='grid grid-cols-1 gap-3 mt-10 md:grid-cols-3'>
         {articles.map((article, index) => (
           <div
             key={`article-${index}`}
