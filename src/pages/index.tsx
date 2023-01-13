@@ -1,13 +1,15 @@
 import { Client } from '@notionhq/client';
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { GiTrophyCup } from 'react-icons/gi';
 import { RoughNotation } from 'react-rough-notation';
 
+import FeaturedArticles from '@/components/FeaturedArticles';
 import Header from '@/components/layout/Header';
 import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
+import Timeline from '@/components/Timeline';
 
 import ProfilePic from '../../public/images/George-Dragan.jpg';
 import ProfilePicCartoon from '../../public/images/George-Dragan-Cartoon.png';
@@ -31,9 +33,35 @@ interface NotionArticle {
   };
 }
 
+interface NotionJourneyItem {
+  properties: {
+    Name: {
+      title: {
+        plain_text: string;
+      }[];
+    };
+    Achievement: {
+      rich_text: {
+        plain_text: string;
+      }[];
+    };
+    Description: {
+      rich_text: {
+        plain_text: string;
+      }[];
+    };
+    Date: {
+      date: {
+        start: string;
+      };
+    };
+  };
+}
+
 const HomePage: React.FC<{
-  featuredArticles: NotionArticle[];
-}> = ({ featuredArticles }) => {
+  notionArticles: NotionArticle[];
+  notionJourney: NotionJourneyItem[];
+}> = ({ notionArticles, notionJourney }) => {
   const { theme } = useTheme();
 
   const [mounted, setMounted] = useState(false);
@@ -42,11 +70,19 @@ const HomePage: React.FC<{
     setMounted(true);
   }, []);
 
-  const articles = featuredArticles.slice(0, 3).map((entry) => ({
-    title: entry.properties.Name.title[0].plain_text,
-    url: entry.properties.URL.url,
-    description: entry.properties.Description.rich_text[0]?.plain_text,
+  const articles = notionArticles.slice(0, 3).map((article) => ({
+    title: article.properties.Name.title[0].plain_text,
+    url: article.properties.URL.url,
+    description: article.properties.Description.rich_text[0]?.plain_text,
   }));
+
+  const journey = notionJourney.map((journeyItem) => ({
+    title: journeyItem.properties.Name.title[0].plain_text,
+    description: journeyItem.properties.Description.rich_text[0]?.plain_text,
+    achivement: journeyItem.properties.Achievement.rich_text[0]?.plain_text,
+    year: dayjs(journeyItem.properties.Date.date.start).year(),
+  }));
+
   return (
     <Layout>
       {/* <Seo templateTitle='Home' /> */}
@@ -61,16 +97,15 @@ const HomePage: React.FC<{
                   George Drăgan
                 </h1>
                 <sub>
-                  Software Developer
-                  {/* at{' '}
+                  Software Developer at{' '}
                   <a
                     className='hover:underline'
                     href='https://www.qcatalyst.com'
                     target='_blank'
                     rel='noreferrer'
                   >
-                    <b>QCatalyst</b>
-                  </a> */}
+                    <b>QC</b>
+                  </a>
                 </sub>
               </div>
               <p className='mt-2 max-w-lg text-gray-500 dark:text-gray-300'>
@@ -379,170 +414,10 @@ const HomePage: React.FC<{
             height={42}
           />
         </section>
-        {articles.length > 0 && (
-          <section className='mt-12'>
-            <h2>What I found interesting this week:</h2>
-            <div className='flex justify-between mt-12'>
-              {articles.map((article, index) => (
-                <div
-                  key={`article-${index}`}
-                  className='h-90 overflow-hidden m-auto w-60 rounded-lg shadow-lg cursor-pointer md:w-80'
-                >
-                  <a
-                    href={article.url}
-                    target='_blank'
-                    className='block w-full h-full'
-                    rel='noreferrer'
-                  >
-                    <div className='p-4 w-full bg-white dark:bg-gray-800'>
-                      <p className='text-md font-medium text-indigo-500'></p>
-                      <p className='mb-2 text-xl font-medium text-gray-800 dark:text-white'>
-                        {article.title}
-                      </p>
-                      <p className='text-md font-light text-gray-400 dark:text-gray-300'>
-                        {article.description}
-                      </p>
-                    </div>
-                  </a>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-        <section className='mt-12'>
-          <h2>My journey so far:</h2>
-          <div className='flex justify-center dark:text-white'>
-            <div className=''>
-              <div className='container mx-auto w-full h-full'>
-                <div className='wrap overflow-hidden relative p-10 h-full'>
-                  <div
-                    className='border-2-2 border-yellow-555 absolute h-full border'
-                    style={{
-                      right: '50%',
-                      border: '2px solid #FFC100',
-                      borderRadius: '1%',
-                    }}
-                  ></div>
-                  <div
-                    className='border-2-2 border-yellow-555 absolute h-full border'
-                    style={{
-                      left: '50%',
-                      border: '2px solid #FFC100',
-                      borderRadius: '1%',
-                    }}
-                  ></div>
 
-                  <div className='left-timeline flex flex-row-reverse justify-between items-center mb-8 w-full'>
-                    <div className='order-1 w-5/12'></div>
-                    <div className='order-1 px-1 py-4 w-5/12 text-right'>
-                      <p className='mb-3 text-lg text-yellow-600 dark:text-yellow-300'>
-                        2021
-                      </p>
-                      <h4 className='mb-3 text-lg font-bold md:text-2xl'>
-                        NextJS, Sanity,Elastic Search and Lambda Functions For
-                        Explorer Dashboard
-                      </h4>
-                      <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
-                        Starting an exciting project that aims to deliver our
-                        high quality resources to explorers around the world!
-                      </p>
-                    </div>
-                  </div>
-                  <div className='right-timeline flex justify-between items-center mb-8 w-full'>
-                    <div className='order-1 w-5/12'></div>
+        {articles.length > 0 ? <FeaturedArticles articles={articles} /> : null}
 
-                    <div className='relative order-1 px-1 py-4 w-5/12 text-left'>
-                      <div className='flex flex-wrap items-center'>
-                        <p className='mr-2 mb-3 text-lg text-yellow-600 dark:text-yellow-300'>
-                          2020
-                        </p>
-                        <div className='group flex'>
-                          <GiTrophyCup
-                            size={35}
-                            className='hidden text-yellow-500 animate-bounce lg:block group-hover:animate-none hover:animate-none'
-                          ></GiTrophyCup>
-                          <span className='p-2 text-white bg-yellow-400 rounded-lg shadow-lg lg:hidden group-hover:block hover:block'>
-                            Got a{' '}
-                            <a
-                              className='underline lg:no-underline	hover:underline'
-                              href='https://winners.webbyawards.com/2021/websites-and-mobile-sites/general-websites-and-mobile-sites/corporate-social-responsibility/181725/field-notes'
-                              target='_blank'
-                              rel='noreferrer'
-                            >
-                              <b> 🎉 Webby Award 🎉 </b>
-                            </a>
-                          </span>
-                        </div>
-                      </div>
-
-                      <h4 className='mb-3 text-lg font-bold md:text-2xl'>
-                        Let the Frontend Begin
-                      </h4>
-                      <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
-                        Started working more heavily on frontend. React, Gatsby
-                        and than NextJS with a sprinkle o Node and Prisma for
-                        building a beautifully expedition/journey tracker for
-                        explorers.
-                      </p>
-                    </div>
-                  </div>
-                  <div className='left-timeline flex flex-row-reverse justify-between items-center mb-8 w-full'>
-                    <div className='order-1 w-5/12'></div>
-                    <div className='order-1 px-1 py-4 w-5/12 text-right'>
-                      <p className='mb-3 text-lg text-yellow-600 dark:text-yellow-300'>
-                        2019
-                      </p>
-                      <h4 className='mb-3 text-lg font-bold md:text-2xl'>
-                        AirFlow, Scrapy and Docker Swarm for a scraping
-                        infrastructure that fights against insurance froude
-                      </h4>
-                      <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
-                        Extracting data from the major automotive selling
-                        websites in search for fraudulent sales postings. Data
-                        monitoring and validation were the primary focus.
-                      </p>
-                    </div>
-                  </div>
-                  <div className='right-timeline flex justify-between items-center mb-8 w-full'>
-                    <div className='order-1 w-5/12'></div>
-
-                    <div className='order-1 px-1 py-4 w-5/12'>
-                      <p className='mb-3 text-lg text-yellow-600 dark:text-yellow-300'>
-                        2018
-                      </p>
-                      <h4 className='mb-3 text-lg font-bold text-left md:text-2xl'>
-                        Python, Crawling and Hadoop for surfacing client
-                        satisfaction in accommodation industry
-                      </h4>
-                      <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
-                        Making my way around a big distributed crawling
-                        infrastructure, extracting data, building reports and
-                        learning a lot of stuff.
-                      </p>
-                    </div>
-                  </div>
-                  <div className='left-timeline flex flex-row-reverse justify-between items-center mb-8 w-full'>
-                    <div className='order-1 w-5/12'></div>
-
-                    <div className='order-1 px-1 py-4 w-5/12 text-right'>
-                      <p className='mb-3 text-lg text-yellow-600 dark:text-yellow-300'>
-                        2017
-                      </p>
-                      <h4 className='mb-3 text-lg font-bold md:text-2xl'>
-                        Let the Programming begin
-                      </h4>
-                      <p className='text-sm leading-snug text-opacity-100 md:text-base dark:text-gray-50'>
-                        From a statistic and political science background
-                        started learning Python, JavaScript and SQL. Excited to
-                        work with big data technologies.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Timeline journey={journey} />
       </main>
     </Layout>
   );
@@ -555,13 +430,25 @@ export const getStaticProps = async () => {
   const notion = new Client({
     auth: process.env.NOTION_TOKEN,
   });
-  const response = await notion.databases.query({
+  const featuredArticles = await notion.databases.query({
     database_id: '35b243154a6f40208e46667b499d7e70',
     sorts: [{ timestamp: 'last_edited_time', direction: 'descending' }],
   });
 
+  const journey = await notion.databases.query({
+    database_id: '3134f12ce36d4a3bb72dfa7e9caa5b50',
+    sorts: [
+      {
+        property: 'Date',
+        direction: 'descending',
+      },
+    ],
+  });
   return {
-    props: { featuredArticles: response.results },
+    props: {
+      notionArticles: featuredArticles.results,
+      notionJourney: journey.results,
+    },
     revalidate: 60 * 60 * 24,
   };
 };

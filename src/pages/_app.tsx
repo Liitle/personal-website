@@ -5,7 +5,7 @@ import '@/styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider defaultTheme='light' attribute='class'>
+    <ThemeProvider defaultTheme='dark' attribute='class'>
       <Component {...pageProps} />
     </ThemeProvider>
   );
