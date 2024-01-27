@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 
 import { openGraph } from '@/lib/helper';
 
-// !STARTERCONF Change these default meta
 const defaultMeta = {
   title: 'George Dragan - Software Developer',
   siteName: 'George Dragan - Software Developer',

@@ -57,18 +57,17 @@ const HomePage: React.FC<{
   notionJourney: NotionJourneyItem[];
 }> = ({ notionArticles, notionJourney }) => {
   const { theme, setTheme } = useTheme();
-
-  const articles = notionArticles.slice(0, 3).map((article) => ({
-    title: article.properties.Name.title[0].plain_text,
-    url: article.properties.URL.url,
-    description: article.properties.Description.rich_text[0]?.plain_text,
+  const articles = notionArticles?.slice(0, 3).map((article) => ({
+    title: article.properties.Name?.title[0].plain_text,
+    url: article.properties.URL?.url,
+    description: article.properties.Description?.rich_text[0]?.plain_text,
   }));
 
-  const journey = notionJourney.map((journeyItem) => ({
-    title: journeyItem.properties.Name.title[0].plain_text,
-    description: journeyItem.properties.Description.rich_text[0]?.plain_text,
-    achivement: journeyItem.properties.Achievement.rich_text[0]?.plain_text,
-    year: dayjs(journeyItem.properties.Date.date.start).year(),
+  const journey = notionJourney?.map((journeyItem) => ({
+    title: journeyItem.properties.Name?.title[0].plain_text,
+    description: journeyItem.properties.Description?.rich_text[0]?.plain_text,
+    achivement: journeyItem.properties.Achievement?.rich_text[0]?.plain_text,
+    year: dayjs(journeyItem.properties.Date?.date.start).year(),
   }));
 
   return (
