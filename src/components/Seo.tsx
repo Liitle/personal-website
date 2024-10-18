@@ -6,8 +6,7 @@ import { openGraph } from '@/lib/helper';
 const defaultMeta = {
   title: 'George Dragan - Software Developer',
   siteName: 'George Dragan - Software Developer',
-  description:
-    'One pice of the internet were you can find a bit about me and what I find interesting',
+  description: 'One pice of the internet were you can find a bit about me.',
   url: 'https://georgedragan.ro',
   image:
     'https://raw.githubusercontent.com/Liitle/personal-website/74fa89e8a3c9c823795b55b22d1e9c3e8f73e2cc/public/images/GLogoJPG.jpeg',
