@@ -160,9 +160,8 @@ const HomePage: React.FC<{
             <div className='flex relative flex-col items-center'>
               <div className='-z-10 bg-brand-secondary absolute top-full left-1/2 w-1 h-64 transform -translate-x-1/2'></div>
               <p className='bg-brand-secondary font-subtitle h5 p-6 mt-10 max-w-lg text-white rounded-lg shadow-lg'>
-                Part of amazing teams building beautiful products! Passionate
-                about easily maintainable technologies that deliver products
-                fast!
+                Working with amazing people to build beautiful and maintainable
+                tech. I value pragmatism over perfection when finding solutions.
               </p>
             </div>
           </div>
