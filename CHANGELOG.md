@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/Liitle/personal-website/compare/v0.1.3...v0.1.4) (2024-10-19)
+
+
+### Bug Fixes
+
+* fix visual bug ([9992f35](https://github.com/Liitle/personal-website/commit/9992f35a147dbd538cf2a75fac73110d86d7aa06))
+
 ### [0.1.3](https://github.com/Liitle/personal-website/compare/v0.1.2...v0.1.3) (2024-10-19)
 
 
