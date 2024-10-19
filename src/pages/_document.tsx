@@ -17,11 +17,8 @@ class MyDocument extends Document {
       <Html lang='en'>
         <Head>
           <link
-            rel='preload'
-            href='/fonts/inter-var-latin.woff2'
-            as='font'
-            type='font/woff2'
-            crossOrigin='anonymous'
+            href='https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Open+Sans:wght@400;600&family=Nunito:wght@400;600&display=swap'
+            rel='stylesheet'
           />
         </Head>
         <body>

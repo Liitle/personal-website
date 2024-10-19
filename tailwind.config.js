@@ -16,29 +16,19 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-      backgroundImage: {
-        night:
-          "url('https://media.istockphoto.com/photos/deep-space-background-picture-id178149253?b=1&k=20&m=178149253&s=170667a&w=0&h=_XDvcsDmRo_O9sV9l_Q4kNXZQq14xU9Cf-Ai7LpJOSY=')",
-        day: "url('https://patcegan.files.wordpress.com/2012/02/morning-light.jpg')",
-      },
       fontFamily: {
-        primary: ['Inter', ...fontFamily.sans],
+        title: ['Poppins', ...fontFamily.sans],
+        subtitle: ['Open Sans', ...fontFamily.sans],
+        body: ['Nunito', ...fontFamily.sans],
       },
       colors: {
-        // primary: {
-        //   // Customize it on globals.css :root
-        //   50: withOpacity('--tw-clr-primary-50'),
-        //   100: withOpacity('--tw-clr-primary-100'),
-        //   200: withOpacity('--tw-clr-primary-200'),
-        //   300: withOpacity('--tw-clr-primary-300'),
-        //   400: withOpacity('--tw-clr-primary-400'),
-        //   500: withOpacity('--tw-clr-primary-500'),
-        //   600: withOpacity('--tw-clr-primary-600'),
-        //   700: withOpacity('--tw-clr-primary-700'),
-        //   800: withOpacity('--tw-clr-primary-800'),
-        //   900: withOpacity('--tw-clr-primary-900'),
-        // },
-        // dark: '#222222',
+        brand: {
+          primary: '#003B73', // Deep navy blue
+          secondary: '#FF7A00', // Vibrant orange
+          accent: '#1C9FFF', // Light blue
+          dark: '#2E2E2E', // Dark grey
+          light: '#F4F4F4', // Light grey
+        },
       },
       keyframes: {
         flicker: {

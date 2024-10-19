@@ -73,7 +73,7 @@ const HomePage: React.FC<{
   return (
     <Layout>
       <Seo />
-      <main className='mb-10'>
+      <main>
         <section className='mt-10'>
           <div className='flex flex-col items-center'>
             <div
@@ -93,15 +93,17 @@ const HomePage: React.FC<{
                   className='rounded-full'
                   src={ProfilePicDay}
                   alt='Picture of George Dragan'
+                  width={200}
+                  height={200}
                 />
               )}
             </div>
 
-            <h1 className='font-mono text-gray-800 dark:text-gray-100'>
+            <h1 className='text-brand-primary dark:text-brand-accent'>
               George Drăgan
             </h1>
-            <span className=''>
-              Software Developer at{' '}
+            <span className='font-subtitle'>
+              Software Developer | Tech Lead at{' '}
               <a
                 className='hover:underline'
                 href='https://www.qcatalyst.com'
@@ -113,25 +115,6 @@ const HomePage: React.FC<{
             </span>
 
             <div className='grid grid-flow-col auto-cols-max mt-2'>
-              <a
-                className='ml-3'
-                href='https://www.instagram.com/georgedragan01/'
-                target='_blank'
-                rel='noreferrer'
-              >
-                <svg
-                  fill='none'
-                  stroke='currentColor'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  className='w-6 h-6 text-pink-400'
-                  viewBox='0 0 24 24'
-                >
-                  <rect width='20' height='20' x='2' y='2' rx='5' ry='5'></rect>
-                  <path d='M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01'></path>
-                </svg>
-              </a>
               <a
                 href='https://www.linkedin.com/in/george-dragan/'
                 target='_blank'
@@ -154,11 +137,34 @@ const HomePage: React.FC<{
                   <circle cx='4' cy='4' r='2' stroke='none'></circle>
                 </svg>
               </a>
+              <a
+                className='ml-3'
+                href='https://www.instagram.com/__george__d__/'
+                target='_blank'
+                rel='noreferrer'
+              >
+                <svg
+                  fill='none'
+                  stroke='currentColor'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  className='w-6 h-6 text-pink-400'
+                  viewBox='0 0 24 24'
+                >
+                  <rect width='20' height='20' x='2' y='2' rx='5' ry='5'></rect>
+                  <path d='M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01'></path>
+                </svg>
+              </a>
             </div>
-            <p className='mt-10 max-w-lg text-gray-500 dark:text-gray-300'>
-              Part of amazing teams building beautiful products! Passionate
-              about easily maintainable technologies that deliver products fast!
-            </p>
+            <div className='flex relative flex-col items-center'>
+              <div className='-z-10 bg-brand-secondary absolute top-full left-1/2 w-1 h-64 transform -translate-x-1/2'></div>
+              <p className='bg-brand-secondary font-subtitle h5 p-6 mt-10 max-w-lg text-white rounded-lg shadow-lg'>
+                Part of amazing teams building beautiful products! Passionate
+                about easily maintainable technologies that deliver products
+                fast!
+              </p>
+            </div>
           </div>
         </section>
 
