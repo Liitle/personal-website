@@ -1,5 +1,6 @@
 {
   "name": "george-personal-website",
+  "license": "MIT",
   "version": "0.1.1",
   "private": true,
   "scripts": {
@@ -25,7 +26,7 @@
     "clsx": "^1.1.1",
     "dayjs": "^1.11.7",
     "next": "^14.2.15",
-    "next-themes": "^0.0.15",
+    "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^4.3.1",
@@ -39,16 +40,16 @@
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
     "@types/jest": "^29.5.13",
-    "@types/react": "^18.3.11",
+    "@types/react": "^18.0.0",
     "@types/tailwindcss": "^2.2.4",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
     "autoprefixer": "^10.4.0",
     "babel-jest": "^27.4.5",
-    "eslint": "^7.32.0",
+    "eslint": "^8.0.0",
     "eslint-config-next": "^14.2.15",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "husky": "^7.0.4",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.4.5",
@@ -70,5 +71,8 @@
     "src/**/*.{json,css,scss,md}": [
       "prettier -w"
     ]
+  },
+  "resolutions": {
+    "@types/react": "^18.0.0"
   }
 }
