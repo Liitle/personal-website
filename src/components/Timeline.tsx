@@ -13,7 +13,11 @@ interface TimelineProps {
 const Timeline: React.FunctionComponent<TimelineProps> = ({ journey }) => {
   return (
     <section className='mt-10'>
-      <h2>My journey so far:</h2>
+      <div className='flex justify-start w-1/2'>
+        <h2 className='text-xl font-semibold md:text-2xl'>
+          My journey so far:
+        </h2>
+      </div>
       <div className='flex justify-center mt-10 dark:text-white'>
         <div className=''>
           <div className='container mx-auto w-full h-full'>
@@ -22,16 +26,12 @@ const Timeline: React.FunctionComponent<TimelineProps> = ({ journey }) => {
                 className='border-2-2 border-brand-secondary absolute h-full border'
                 style={{
                   right: '50%',
-                  // border: '2px solid #FFC100',
-                  // borderRadius: '1%',
                 }}
               ></div>
               <div
                 className='border-2-2 border-brand-secondary absolute h-full border'
                 style={{
                   left: '50%',
-                  // border: '2px solid #FFC100',
-                  // borderRadius: '1%',
                 }}
               ></div>
 
