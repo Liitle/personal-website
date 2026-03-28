@@ -3,9 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>George Drăgan - Software Engineer</title>
+  <title>George Drăgan — Software Engineer</title>
+  <meta name="description" content="Software engineer building backend systems and AI-assisted pipelines. Nearly a decade of experience, based in Cluj-Napoca." />
+  <link rel="canonical" href="https://georgedragan.ro" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230e0e0f'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='ui-monospace,monospace' font-size='13' font-weight='600' fill='%23dddbd3'>GD</text></svg>" />
-  <meta name="description" content="Software engineer building backend systems and IP analytics tools. Based in Cluj-Napoca." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:url" content="https://georgedragan.ro" />
+  <meta property="og:title" content="George Drăgan — Software Engineer" />
+  <meta property="og:description" content="Software engineer building backend systems and AI-assisted pipelines. Nearly a decade of experience, based in Cluj-Napoca." />
+  <meta property="og:locale" content="en_GB" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="George Drăgan — Software Engineer" />
+  <meta name="twitter:description" content="Software engineer building backend systems and AI-assisted pipelines. Nearly a decade of experience, based in Cluj-Napoca." />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "George Drăgan",
+    "url": "https://georgedragan.ro",
+    "jobTitle": "Software Engineer",
+    "description": "Software engineer building backend systems and AI-assisted pipelines.",
+    "address": { "@type": "PostalAddress", "addressLocality": "Cluj-Napoca", "addressCountry": "RO" },
+    "sameAs": [
+      "https://www.linkedin.com/in/george-dragan/",
+      "https://github.com/Liitle"
+    ]
+  }
+  </script>
   <style>
     /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,11 +91,17 @@
     /* ── Header ── */
     .header {
       display: flex;
-      align-items: flex-start;
-      gap: 22px;
+      flex-direction: column;
+      gap: 16px;
       padding-bottom: 40px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 48px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
 
     .avatar {
@@ -127,9 +163,9 @@
       border-width: 0 1px 1px 0;
     }
 
-    .header-body { flex: 1; }
+    .header-identity { flex: 1; }
 
-    .header-body h1 {
+    .header-identity h1 {
       font-family: var(--sans);
       font-size: 1.35rem;
       font-weight: 500;
@@ -141,7 +177,7 @@
     .header-sub {
       font-size: 0.78rem;
       color: var(--muted);
-      margin-bottom: 12px;
+      margin-bottom: 0;
     }
 
     .header-sub .branch { color: var(--accent); }
@@ -168,7 +204,7 @@
     nav {
       display: flex;
       gap: 20px;
-      margin-bottom: 48px;
+      margin-left: auto;
     }
 
     nav a {
@@ -447,9 +483,11 @@
     @media (max-width: 520px) {
       .page { padding: 32px 18px 60px; }
 
-      .header { gap: 16px; }
+      .header { gap: 14px; }
+      .header-top { gap: 14px; }
       .avatar { width: 54px; height: 54px; }
-      .header-body h1 { font-size: 1.15rem; }
+      .header-identity h1 { font-size: 1.15rem; }
+      nav { margin-left: auto; }
 
       .log-header,
       .entry {
@@ -680,25 +718,24 @@
 
   <!-- ── Header ── -->
   <header class="header">
-    <div class="avatar">
-      <div class="avatar-ph">GD</div>
-    </div>
-    <div class="header-body">
-      <h1>George Drăgan</h1>
-      <div class="header-sub">
-        software engineer<span class="cursor"></span>
+    <div class="header-top">
+      <div class="avatar">
+        <div class="avatar-ph">GD</div>
       </div>
-      <p class="bio">
-        I build backend systems and AI-assisted pipelines for small product teams.
-        Nearly a decade of working up the stack, from data infrastructure to LLM workflows.
-      </p>
+      <div class="header-identity">
+        <h1>George Drăgan</h1>
+        <div class="header-sub">
+          software engineer<span class="cursor"></span>
+        </div>
+      </div>
+      <nav>
+        <a href="#contact">contact</a>
+      </nav>
     </div>
-
-    <!-- ── Nav ── -->
-    <nav>
-      <a href="#contact">contact</a>
-    </nav>
-
+    <p class="bio">
+      I build backend systems and AI-assisted pipelines for small product teams.
+      Nearly a decade of working up the stack, from data infrastructure to LLM workflows.
+    </p>
   </header>
 
   <!-- ── Commit log ── -->
