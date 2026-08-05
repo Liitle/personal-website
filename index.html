@@ -74,7 +74,17 @@
     a:hover { color: var(--text); }
 
     /* ── Layout ── */
+    /* ── Ambient particle canvas ── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;   /* never intercepts clicks/scroll */
+    }
+
     .page {
+      position: relative;
+      z-index: 1;             /* content sits above the dust */
       max-width: 720px;
       margin: 0 auto;
       padding: 56px 28px 80px;
@@ -714,6 +724,7 @@
   </style>
 </head>
 <body>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 <div class="page">
 
   <!-- ── Header ── -->
@@ -751,13 +762,32 @@
 
     <div class="log">
       <div class="entry head">
+        <div class="col-hash">e4b7a2</div>
+        <div class="col-date">2026</div>
+        <div class="col-msg">
+          <div class="msg-subject">
+            self-hosted open-weights models &amp; agent evals
+            <span class="tag tag-head">HEAD</span>
+            <span class="tag tag-origin">origin/main</span>
+          </div>
+          <div class="msg-body">
+            Self-hosted open-weights models for sensitive data that can't leave our
+            infrastructure. Evaluation harnesses to benchmark agent behaviour and catch regressions.
+          </div>
+          <div class="diff">
+            <span class="add">+ vLLM</span>
+            <span class="add">+ open weights</span>
+            <span class="add">+ agent evals</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="entry">
         <div class="col-hash">a3f91c</div>
-        <div class="col-date">2025 – now</div>
+        <div class="col-date">2025</div>
         <div class="col-msg">
           <div class="msg-subject">
             patent analysis pipeline &amp; structured reporting
-            <span class="tag tag-head">HEAD</span>
-            <span class="tag tag-origin">origin/main</span>
           </div>
           <div class="msg-body">
             Multi-step evaluation pipeline for patent novelty. Parallel claim processing,
@@ -1200,6 +1230,249 @@
         setTimeout(pop, 320);
       }
     });
+  })();
+
+  // ── Particle field: Brownian clusters that assemble into shapes on hover ──
+  // Vanilla, no deps. A faint ambient dust layer drifts behind. A few clusters
+  // jitter randomly (Brownian) and snap into clean geometric shapes when the
+  // cursor / finger is near, then dissolve back to random when you leave.
+  // Honors prefers-reduced-motion and pauses when the tab is hidden.
+  (function() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let w = 0, h = 0, dpr = 1, rafId = null;
+    let dust = [];
+    let clusters = [];
+
+    // pointer in viewport coords (canvas is position:fixed at 0,0)
+    const pointer = { x: -9999, y: -9999, active: false };
+    const ACTIVATE = 150; // px cursor→cluster distance that triggers assembly
+
+    const TAU = Math.PI * 2;
+    const rand = (min, max) => min + Math.random() * (max - min);
+
+    // ── shape generators — target offsets centered on (0,0) ──
+    function ringPoints(n, r) {
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + (i / n) * TAU;
+        pts.push({ x: Math.cos(a) * r, y: Math.sin(a) * r });
+      }
+      return pts;
+    }
+    function gridPoints(n, r) {
+      const cols = Math.ceil(Math.sqrt(n));
+      const rows = Math.ceil(n / cols);
+      const sx = cols > 1 ? (2 * r) / (cols - 1) : 0;
+      const sy = rows > 1 ? (2 * r) / (rows - 1) : 0;
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        pts.push({ x: -r + (i % cols) * sx, y: -r + Math.floor(i / cols) * sy });
+      }
+      return pts;
+    }
+    // rotate a 3D point to a fixed 3/4 view, then orthographic-project to 2D
+    function project3d(p) {
+      const ay = 0.62, ax = 0.5;
+      const x1 = p.x * Math.cos(ay) + p.z * Math.sin(ay);
+      const z1 = -p.x * Math.sin(ay) + p.z * Math.cos(ay);
+      const y1 = p.y * Math.cos(ax) - z1 * Math.sin(ax);
+      return { x: x1, y: y1 };
+    }
+    function edgePoints(segments, n) { // n points spread across a set of line segments
+      let total = 0;
+      for (const s of segments) { s.len = Math.hypot(s.b.x - s.a.x, s.b.y - s.a.y); total += s.len; }
+      const pts = [];
+      const stepLen = total / n;
+      let si = 0, acc = 0;
+      for (let i = 0; i < n; i++) {
+        const target = i * stepLen;
+        while (si < segments.length - 1 && acc + segments[si].len < target) { acc += segments[si].len; si++; }
+        const s = segments[si];
+        const t = s.len ? (target - acc) / s.len : 0;
+        pts.push({ x: s.a.x + (s.b.x - s.a.x) * t, y: s.a.y + (s.b.y - s.a.y) * t });
+      }
+      return pts;
+    }
+    function cubePoints(n, r) { // wireframe cube in a 3/4 view (12 edges)
+      const s = r * 0.78, v = [];
+      for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) {
+        v.push({ x: sx * s, y: sy * s, z: sz * s });
+      }
+      const proj = v.map(project3d), segs = [];
+      for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
+        let diff = 0;
+        if (v[i].x !== v[j].x) diff++;
+        if (v[i].y !== v[j].y) diff++;
+        if (v[i].z !== v[j].z) diff++;
+        if (diff === 1) segs.push({ a: proj[i], b: proj[j] }); // adjacent = differ on one axis
+      }
+      return edgePoints(segs, n);
+    }
+    function spherePoints(r) { // wireframe globe: latitude rings + a meridian, projected
+      const R = r * 0.98, pts = [];
+      const push3 = (x, y, z) => pts.push(project3d({ x, y, z }));
+      const rings = [ { s: 0, n: 10 }, { s: 0.62, n: 7 }, { s: -0.62, n: 7 } ];
+      for (const ring of rings) {
+        const y = ring.s * R, rad = Math.sqrt(Math.max(0, R * R - y * y));
+        for (let i = 0; i < ring.n; i++) {
+          const a = (i / ring.n) * TAU;
+          push3(Math.cos(a) * rad, y, Math.sin(a) * rad);
+        }
+      }
+      for (let i = 0; i < 8; i++) { // meridian through the poles, for depth
+        const a = (i / 8) * TAU;
+        push3(0, Math.cos(a) * R, Math.sin(a) * R);
+      }
+      return pts;
+    }
+    function filledHexPoints(r) { // solid hexagon on a hex lattice (fills the area)
+      const layers = 2, size = r / (layers + 0.3), pts = [];
+      for (let q = -layers; q <= layers; q++) {
+        const lo = Math.max(-layers, -q - layers), hi = Math.min(layers, -q + layers);
+        for (let rr = lo; rr <= hi; rr++) {
+          pts.push({ x: size * Math.sqrt(3) * (q + rr / 2), y: size * 1.5 * rr });
+        }
+      }
+      return pts;
+    }
+
+    // one shape per cluster (dot count is intrinsic to each generator)
+    const SHAPES = [
+      { make: r => cubePoints(26, r) },
+      { make: r => spherePoints(r) },
+      { make: r => filledHexPoints(r) },
+      { make: r => ringPoints(18, r) },
+      { make: r => gridPoints(16, r) }
+    ];
+
+    // cluster anchors as viewport fractions (kept off dead-center)
+    const ANCHORS = [
+      { fx: 0.16, fy: 0.24 }, { fx: 0.84, fy: 0.28 }, { fx: 0.20, fy: 0.72 },
+      { fx: 0.82, fy: 0.70 }, { fx: 0.50, fy: 0.88 }
+    ];
+
+    function buildDust() {
+      const target = Math.min(90, Math.round((w * h) / 22000));
+      dust = [];
+      for (let i = 0; i < target; i++) {
+        dust.push({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: rand(-0.1, 0.1), vy: rand(-0.1, 0.1),
+          r: rand(0.7, 1.5), alpha: rand(0.1, 0.3),
+          accent: Math.random() < 0.12
+        });
+      }
+    }
+
+    function buildClusters() {
+      const scale = Math.max(0.7, Math.min(1.2, w / 1100)); // shrink shapes on small screens
+      clusters = ANCHORS.map((anchor, i) => {
+        const shape = SHAPES[i % SHAPES.length];
+        const r = 34 * scale;
+        const cx = anchor.fx * w, cy = anchor.fy * h;
+        const dots = shape.make(r).map(t => ({
+          tx: t.x, ty: t.y,                             // shape offset from center
+          bx: cx + rand(-r * 2.6, r * 2.6), by: cy + rand(-r * 2.6, r * 2.6), // brownian start (wide)
+          bvx: 0, bvy: 0, x: 0, y: 0,
+          rr: rand(1.0, 2.0), alpha: rand(0.4, 0.8),
+          accent: Math.random() < 0.28
+        }));
+        return { cx, cy, r, a: 0, dots };
+      });
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildDust();
+      buildClusters();
+    }
+
+    function dot(x, y, r, alpha, accent) {
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, TAU);
+      ctx.fillStyle = accent
+        ? 'rgba(200, 240, 122, ' + alpha + ')'          // --accent
+        : 'rgba(205, 203, 193, ' + (alpha * 0.9) + ')'; // dim --text
+      ctx.fill();
+    }
+
+    function step() {
+      ctx.clearRect(0, 0, w, h);
+
+      // ambient dust — gentle Brownian drift, wraps at edges
+      for (const p of dust) {
+        p.vx += rand(-0.02, 0.02); p.vy += rand(-0.02, 0.02);
+        p.vx *= 0.96; p.vy *= 0.96;
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -5) p.x = w + 5; else if (p.x > w + 5) p.x = -5;
+        if (p.y < -5) p.y = h + 5; else if (p.y > h + 5) p.y = -5;
+        dot(p.x, p.y, p.r, p.alpha, p.accent);
+      }
+
+      // clusters — jitter when idle, snap to shape when the cursor is near
+      for (const c of clusters) {
+        const dx = pointer.x - c.cx, dy = pointer.y - c.cy;
+        const near = pointer.active && (dx * dx + dy * dy) < ACTIVATE * ACTIVATE;
+        c.a += ((near ? 1 : 0) - c.a) * 0.09; // ease assemble / dissolve
+        const maxRoam = c.r * 3.6;            // don't let a wanderer escape
+        for (const d of c.dots) {
+          // Brownian wander — slow, wide, only weakly sprung to the cluster center
+          d.bvx += rand(-0.09, 0.09) + (c.cx - d.bx) * 0.0002;
+          d.bvy += rand(-0.09, 0.09) + (c.cy - d.by) * 0.0002;
+          d.bvx *= 0.93; d.bvy *= 0.93;
+          d.bx += d.bvx; d.by += d.bvy;
+          const ox = d.bx - c.cx, oy = d.by - c.cy, od = Math.hypot(ox, oy);
+          if (od > maxRoam) { // pull back and bleed velocity at the boundary
+            d.bx = c.cx + ox / od * maxRoam;
+            d.by = c.cy + oy / od * maxRoam;
+            d.bvx *= -0.3; d.bvy *= -0.3;
+          }
+          // blend brownian ←→ shape by the cluster's alignment factor
+          const sx = c.cx + d.tx, sy = c.cy + d.ty;
+          d.x = d.bx + (sx - d.bx) * c.a;
+          d.y = d.by + (sy - d.by) * c.a;
+          dot(d.x, d.y, d.rr, d.alpha, d.accent);
+        }
+      }
+      rafId = requestAnimationFrame(step);
+    }
+
+    function renderStatic() { // reduced-motion: one calm scatter, no loop/interaction
+      ctx.clearRect(0, 0, w, h);
+      for (const p of dust) dot(p.x, p.y, p.r, p.alpha, p.accent);
+      for (const c of clusters) for (const d of c.dots) dot(d.bx, d.by, d.rr, d.alpha, d.accent);
+    }
+
+    const start = () => { if (rafId == null) rafId = requestAnimationFrame(step); };
+    const stop  = () => { if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; } };
+
+    const onMove = (x, y) => { pointer.x = x; pointer.y = y; pointer.active = true; };
+    window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY), { passive: true });
+    window.addEventListener('mouseout', e => { if (!e.relatedTarget) pointer.active = false; }, { passive: true });
+    window.addEventListener('touchmove', e => {
+      const t = e.touches[0];
+      if (t) onMove(t.clientX, t.clientY); // passive: scrolling still works
+    }, { passive: true });
+    window.addEventListener('touchend', () => { pointer.active = false; }, { passive: true });
+
+    window.addEventListener('resize', () => { resize(); if (reduceMotion) renderStatic(); }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else if (!reduceMotion) start();
+    });
+
+    resize();
+    reduceMotion ? renderStatic() : start();
   })();
 </script>
 
